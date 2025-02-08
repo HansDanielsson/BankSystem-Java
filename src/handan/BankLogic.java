@@ -19,6 +19,10 @@ public class BankLogic extends Customer {
 	public List<String> getCustomer(String pNo) {
 
 	}
+	
+	public boolean changeCustomerName(String name, String surname, String pNo) {
+        return false;
+    }
 
 	public int createSavingsAccount(String pNo) {
 		return 0;
@@ -28,12 +32,24 @@ public class BankLogic extends Customer {
 		return "hej";
 	}
 
-	public boolean deposit(String pNo, int accountId, double amount) {
-		return false;
+	public boolean deposit(String pNo, int accountId, int amount) {
+		boolean result = true;
+		if (amount < 0) {
+			result = false;
+		} else {
+
+		}
+		return result;
 	}
 
 	public boolean withdraw(String pNo, int accountId, int amount) {
-		return false;
+		boolean result = true;
+		if (amount < 0 || amount > balance.intValue()) {
+			result = false;
+		} else {
+
+		}
+		return result;
 	}
 
 	public String closeAccount(String pNo, int accountId) {

@@ -11,48 +11,58 @@ import java.math.BigDecimal;
 public class Account {
 
 	// Variabler för enskilda konton
-	BigDecimal balance;
-	BigDecimal interestRate;
-	int accountNumber;
-	String accountName;
+	private int accountNumber; // 1001, 1002, 1003, 1004
+	private String accountType;
+	private BigDecimal balance;
+	private BigDecimal interestRate;
 
 	// Variabler som är gemensamt för alla konton
 	private static int lastAssignedNumber = 1000;
-	private static String accountType = "Sparkonto";
+	private static String accountName = "Sparkonto";
 
 	// Konstruktor för ett nytt bankkonto
 	public Account() {
-		this(BigDecimal.ZERO, BigDecimal.ZERO);
+		this(0, 2.4);
 	}
 
-	public Account(BigDecimal balance) {
-		this(balance, BigDecimal.ZERO);
+	public Account(int balance) {
+		this(balance, 2.4);
 	}
 
-	public Account(BigDecimal inBalance, BigDecimal inInterestRate) {
-		balance = inBalance;
-		interestRate = inInterestRate;
+	public Account(int inBalance, double inInterestRate) {
 		accountNumber = lastAssignedNumber++;
-		accountName = accountType;
+		accountType = accountName;
+		balance = new BigDecimal(inBalance);
+		interestRate = new BigDecimal(inInterestRate);
 	}
 
-	public boolean deposit(String pNo, int accountId, int amount) {
-		boolean result = true;
-		if (amount < 0) {
-			result = false;
+	public boolean deposit(int amount) {
+		if (amount > 0) {
+			balance = balance.add(new BigDecimal(amount));
+			return true;
 		} else {
-
+			return false;
 		}
-		return result;
 	}
 
-	public boolean withdraw(String pNo, int accountId, int amount) {
-		boolean result = true;
-		if (amount < 0 || amount > balance.intValue()) {
-			result = false;
+	public boolean withdraw(int amount) {
+		if (amount > 0 && amount <= balance.intValue()) {
+			balance = balance.subtract(new BigDecimal(amount));
+			return true;
 		} else {
-
+			return false;
 		}
-		return result;
+	}
+
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+
+	public BigDecimal calculateInterest() {
+		return balance.multiply(interestRate).divide(new BigDecimal(100));
+	}
+
+	public String toString() {
+		return " " + accountNumber + " " + balance + " " + accountType + " " + interestRate;
 	}
 }

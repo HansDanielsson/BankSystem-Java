@@ -39,4 +39,9 @@ public class Customer extends Account {
 			return false;
 		}
 	}
+
+	public boolean testAccount() {
+		Account account = new Account();
+		return true;
+	}
 }
