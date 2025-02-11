@@ -32,13 +32,13 @@ public class Account {
 	public Account(int inBalance, double inInterestRate) {
 		accountNumber = lastAssignedNumber++;
 		accountType = accountName;
-		balance = new BigDecimal(inBalance);
-		interestRate = new BigDecimal(inInterestRate);
+		balance = BigDecimal.valueOf(inBalance);
+		interestRate = BigDecimal.valueOf(inInterestRate);
 	}
 
 	public boolean deposit(int amount) {
 		if (amount > 0) {
-			balance = balance.add(new BigDecimal(amount));
+			balance = balance.add(BigDecimal.valueOf(amount));
 			return true;
 		} else {
 			return false;
@@ -47,7 +47,7 @@ public class Account {
 
 	public boolean withdraw(int amount) {
 		if (amount > 0 && amount <= balance.intValue()) {
-			balance = balance.subtract(new BigDecimal(amount));
+			balance = balance.subtract(BigDecimal.valueOf(amount));
 			return true;
 		} else {
 			return false;
@@ -59,10 +59,11 @@ public class Account {
 	}
 
 	public BigDecimal calculateInterest() {
-		return balance.multiply(interestRate).divide(new BigDecimal(100));
+		return balance.multiply(interestRate).divide(BigDecimal.valueOf(100));
 	}
 
+	@Override
 	public String toString() {
-		return " " + accountNumber + " " + balance + " " + accountType + " " + interestRate;
+		return accountNumber + " " + balance + " kr " + accountType + " " + interestRate + "%";
 	}
 }

@@ -4,25 +4,50 @@
  */
 package handan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BankLogic extends Customer {
+
+	private ArrayList<Customer> bankCustomer = new ArrayList<Customer>();
 
 	public List<String> getAllCustomers() {
 
 	}
 
 	public boolean createCustomer(String name, String surname, String pNo) {
-		return false;
+		boolean result = true;
+		for (Customer customer : bankCustomer) {
+			if (customer.getPersonalNumber().equals(pNo)) {
+				result = false;
+				break;
+			}
+		}
+
+		if (result) {
+			Customer newCustomer = new Customer(name, surname, pNo);
+			bankCustomer.add(newCustomer);
+		}
+		return result;
 	}
 
 	public List<String> getCustomer(String pNo) {
 
 	}
-	
+
 	public boolean changeCustomerName(String name, String surname, String pNo) {
-        return false;
-    }
+		boolean result = false;
+		if ((name.length() == 0) && (surname.length() == 0)) {
+			for (Customer customer : bankCustomer) {
+				if (customer.getPersonalNumber().equals(pNo)) {
+					customer.changeCustomerName(name, surname, pNo);
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
 
 	public int createSavingsAccount(String pNo) {
 		return 0;

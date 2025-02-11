@@ -5,9 +5,9 @@
 package handan;
 
 public class Customer extends Account {
-	String customerName;
-	String customerSurname;
-	String personalNumber;
+	private String customerName;
+	private String customerSurname;
+	private String personalNumber;
 
 	// Konstruktor för en ny kund
 	public Customer() {
@@ -28,6 +28,10 @@ public class Customer extends Account {
 		customerSurname = inCustomerSurname;
 		personalNumber = inPersonalNumber;
 	}
+	
+	public String getPersonalNumber() {
+		return personalNumber;
+	}
 
 	public boolean changeCustomerName(String inName, String inSurename, String inPersonalNumber) {
 		// Kontrollera om personnumret matchar det nuvarande personnumret.
@@ -39,9 +43,9 @@ public class Customer extends Account {
 			return false;
 		}
 	}
-
-	public boolean testAccount() {
-		Account account = new Account();
-		return true;
+	
+	@Override
+	public String toString() {
+		return personalNumber + " " + customerName + " " + customerSurname;
 	}
 }
