@@ -12,7 +12,11 @@ public class BankLogic extends Customer {
 	private ArrayList<Customer> bankCustomer = new ArrayList<Customer>();
 
 	public List<String> getAllCustomers() {
-
+		List<String> customerNames = new ArrayList<String>();
+        for (Customer customer : bankCustomer) {
+            customerNames.add(customer.toString());
+        }
+        return customerNames;
 	}
 
 	public boolean createCustomer(String name, String surname, String pNo) {
@@ -37,11 +41,10 @@ public class BankLogic extends Customer {
 
 	public boolean changeCustomerName(String name, String surname, String pNo) {
 		boolean result = false;
-		if ((name.length() == 0) && (surname.length() == 0)) {
+		if (!((name.isEmpty()) && (surname.isEmpty()))) {
 			for (Customer customer : bankCustomer) {
 				if (customer.getPersonalNumber().equals(pNo)) {
-					customer.changeCustomerName(name, surname, pNo);
-					result = true;
+					result = customer.changeCustomerName(name, surname, pNo);
 					break;
 				}
 			}
