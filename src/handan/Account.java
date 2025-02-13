@@ -15,25 +15,21 @@ public class Account {
   // Variabler som är gemensamt för alla konton
   private static int lastAssignedNumber = 1000;
   private static String accountName = "Sparkonto";
+
   // Variabler för enskilda konton
   private int accountNumber; // 1001, 1002, 1003, 1004
   private String accountType;
-
   private BigDecimal balance;
   private BigDecimal interestRate;
 
-  // Konstruktor för ett nytt bankkonto
+  // Default Konstruktor för ett nytt bankkonto
   public Account() {
     this(0, 2.4, false);
   }
 
-  public Account(int balance) {
-    this(balance, 2.4, false);
-  }
-
   public Account(int inBalance, double inInterestRate, boolean addNumber) {
     if (addNumber) {
-      lastAssignedNumber++;
+      lastAssignedNumber++; // Ska bara räknas upp med 1 ibland.
     }
     accountNumber = lastAssignedNumber;
     accountType = accountName;
@@ -53,24 +49,21 @@ public class Account {
   }
 
   /**
-   * Rutin som sätter in beloppet (amount) till saldo (balance) Möjligt att
-   * if-sats är onödig
+   * Rutin som sätter in beloppet (amount) till saldo (balance) Kontroll har redan
+   * utförts på amount > 0
    *
    * @param amount
    * @return om insättning är > 0
    */
   public boolean deposit(int amount) {
-    if (amount > 0) {
-      balance = balance.add(BigDecimal.valueOf(amount));
-      return true;
-    }
-    return false;
+    balance = balance.add(BigDecimal.valueOf(amount));
+    return true;
   }
 
   /**
    * Hämtar kontonummer
    *
-   * @return
+   * @return accountNumber
    */
   public int getAccountNumber() {
     return accountNumber;
@@ -81,6 +74,13 @@ public class Account {
     return toString(true);
   }
 
+  /**
+   * Vid bearbetning av kontot med kontonummer saldo kontotyp om percentOn blir
+   * det med procent.
+   *
+   * @param percentOn
+   * @return "kontonr saldo kontotyp <procent>"
+   */
   public String toString(boolean percentOn) {
     String balanceStr = NumberFormat.getCurrencyInstance(Locale.of("SV", "SE")).format(balance);
 
@@ -101,7 +101,7 @@ public class Account {
    * @return om beloppet har minskat saldo
    */
   public boolean withdraw(int amount) {
-    if (amount > 0 && amount <= balance.intValue()) {
+    if (amount <= balance.intValue()) {
       balance = balance.subtract(BigDecimal.valueOf(amount));
       return true;
     }

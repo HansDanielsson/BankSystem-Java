@@ -4,13 +4,15 @@
  */
 package handan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Customer extends Account {
+  // Privata variabler till kund.
   private String customerName;
   private String customerSurname;
   private String personalNumber;
-  public List<Account> accounts;
+  private List<Account> accounts; // Lista med konton
 
   // Konstruktor för en ny kund
   public Customer() {
@@ -26,15 +28,14 @@ public class Customer extends Account {
   }
 
   /**
-   * Ändrar på kunden med givet inPersonalNumber Endast tillåtet att ändra på sin
-   * egen post. Kontroll har redan utförts.
+   * Ändrar på kunden. Endast tillåtet att ändra på sin egen post. Kontroll har
+   * redan utförts.
    *
    * @param inName
    * @param inSureName
-   * @param inPersonalNumber
    * @return om variablerna har ändrats
    */
-  public boolean changeCustomerName(String inName, String inSureName, String inPersonalNumber) {
+  public boolean changeCustomerName(String inName, String inSureName) {
     boolean result = false;
     // Byter endast om det är någon information
     if (!inName.isEmpty()) {
@@ -49,12 +50,28 @@ public class Customer extends Account {
   }
 
   /**
+   * Rutin som ger ut den privata variabeln accounts
+   *
+   * @return pekare till listan
+   */
+  public List<Account> getAccounts() {
+    return accounts;
+  }
+
+  /**
    * Hämtar personnummer
    *
    * @return personalNumber
    */
   public String getPersonalNumber() {
     return personalNumber;
+  }
+
+  /**
+   * Rutin som sätter den privata pekaren för konton till en ny lista
+   */
+  public void setAccounts() {
+    accounts = new ArrayList<>();
   }
 
   @Override
