@@ -93,7 +93,7 @@ public class BankLogic extends Customer {
         if (customer.getAccounts() == null) {
           customer.setAccounts();
         }
-        Account newAccount = new Account(0, 2.4, true);
+        Account newAccount = new Account(0, 2.4, true); // Här räknas kontonummer.
         customer.getAccounts().add(newAccount);
         result = newAccount.getAccountNumber();
         break;
