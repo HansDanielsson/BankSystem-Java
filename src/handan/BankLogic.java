@@ -37,7 +37,7 @@ public class BankLogic extends Customer {
    *
    * @param pNo
    * @param accountId
-   * @return sträng "kontonr belopp kontotyp ränta"
+   * @return "kontonr belopp kontotyp ränta"
    */
   public String closeAccount(String pNo, int accountId) {
     String result = null;
@@ -83,7 +83,7 @@ public class BankLogic extends Customer {
    * Skapar ett konto för person pNo
    *
    * @param pNo
-   * @return
+   * @return -1 = Hittar inte pNo, annars kontonummer
    */
   public int createSavingsAccount(String pNo) {
     int result = -1;
@@ -106,7 +106,7 @@ public class BankLogic extends Customer {
    * Rutin som tar bort en kund och dess konton
    *
    * @param pNo
-   * @return
+   * @return "pNr f-Namn E-namn, KontoNr Typ Saldo Kr,..."
    */
   public List<String> deleteCustomer(String pNo) {
     List<String> result = null;
@@ -116,7 +116,7 @@ public class BankLogic extends Customer {
         // Skapa en ny lista med kundens data och konton
         ArrayList<String> deList = new ArrayList<>();
         deList.add(customer.toString());
-        if (customer.getAccounts() != null) {
+        if (customer.getAccounts() != null) { // Kund har konton
           for (Account acc : customer.getAccounts()) {
             deList.add(acc.toString(false) + " " + acc.calculateInterest());
           }
@@ -139,7 +139,7 @@ public class BankLogic extends Customer {
    * @param pNo
    * @param accountId
    * @param amount
-   * @return
+   * @return True om det gick bra
    */
   public boolean deposit(String pNo, int accountId, int amount) {
     boolean result = false;
@@ -201,7 +201,7 @@ public class BankLogic extends Customer {
    * Rutin som tar fram en kunds information och denns konton.
    *
    * @param pNo
-   * @return listan enligt beskrivning.
+   * @return lista på bortagna poster.
    */
   public List<String> getCustomer(String pNo) {
     List<String> customerInfo = null;

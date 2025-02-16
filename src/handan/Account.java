@@ -41,7 +41,7 @@ public class Account {
    * Rutin som beräknar räntan på BigDecimal-modell enligt saldo*räntesats / 100.0
    * konverterar till double-tal
    *
-   * @return räntanAccount
+   * @return x xxx kr
    */
   public String calculateInterest() {
     double numberInterest = balance.multiply(interestRate).divide(BigDecimal.valueOf(100)).doubleValue();
@@ -53,10 +53,14 @@ public class Account {
    * utförts på amount > 0
    *
    * @param amount
-   * @return om insättning är > 0
+   * @return true hela tiden för att amount > 0
    */
   public boolean deposit(int amount) {
-    balance = balance.add(BigDecimal.valueOf(amount));
+    try {
+      balance = balance.add(BigDecimal.valueOf(amount));
+    } catch (Exception e) {
+      return false;
+    }
     return true;
   }
 
@@ -79,7 +83,7 @@ public class Account {
    * det med procent.
    *
    * @param percentOn
-   * @return "kontonr saldo kontotyp <procent>"
+   * @return "kontonr saldo kontotyp <procent %>"
    */
   public String toString(boolean percentOn) {
     String balanceStr = NumberFormat.getCurrencyInstance(Locale.of("SV", "SE")).format(balance);
@@ -102,7 +106,11 @@ public class Account {
    */
   public boolean withdraw(int amount) {
     if (amount <= balance.intValue()) {
-      balance = balance.subtract(BigDecimal.valueOf(amount));
+      try {
+        balance = balance.subtract(BigDecimal.valueOf(amount));
+      } catch (Exception e) {
+        return false;
+      }
       return true;
     }
     return false;

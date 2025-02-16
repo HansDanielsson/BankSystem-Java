@@ -28,12 +28,11 @@ public class Customer extends Account {
   }
 
   /**
-   * Ändrar på kunden. Endast tillåtet att ändra på sin egen post. Kontroll har
-   * redan utförts.
+   * Ändrar på kunden. Endast tillåtet att ändra på sin egen post.
    *
    * @param inName
    * @param inSureName
-   * @return om variablerna har ändrats
+   * @return om något värde har ändrats
    */
   public boolean changeCustomerName(String inName, String inSureName) {
     boolean result = false;
