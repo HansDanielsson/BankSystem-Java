@@ -17,7 +17,7 @@ public class Account {
   private static String accountName = "Sparkonto";
 
   // Variabler för enskilda konton
-  private int accountNumber; // 1001, 1002, 1003, 1004
+  private int accountNumber; // 1001, 1002, 1003, 1004 osv.
   private String accountType;
   private BigDecimal balance;
   private BigDecimal interestRate;
