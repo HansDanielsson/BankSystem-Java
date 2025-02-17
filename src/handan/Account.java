@@ -79,7 +79,7 @@ public class Account {
   }
 
   /**
-   * Vid bearbetning av kontot med kontonummer saldo kontotyp om percentOn blir
+   * Vid bearbetning av kontot med kontonummer saldo kontotyp, om percentOn blir
    * det med procent.
    *
    * @param percentOn
