@@ -16,7 +16,7 @@ public class Customer extends Account {
 
   // Konstruktor för en ny kund
   public Customer() {
-    this("Unknown", "Unknown", "Unknown");
+    this("UnknownA", "UnknownB", "UnknownC");
   }
 
   // Används när en ny kund skapas med namn, efternamn och personnummer.
