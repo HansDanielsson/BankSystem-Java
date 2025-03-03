@@ -45,7 +45,7 @@ public class BankLogic extends Customer {
       if (customer.getPersonalNumber().equals(pNo)) {
         for (Account acc : customer.getAccounts()) {
           if (acc.getAccountNumber() == accountId) {
-            result = acc.toString(false) + " " + acc.calculateInterest();
+            result = acc.infoAccount() + " " + acc.calculateInterest();
             customer.getAccounts().remove(acc);
             break;
           }
@@ -93,7 +93,7 @@ public class BankLogic extends Customer {
         if (customer.getAccounts() == null) {
           customer.setAccounts();
         }
-        Account newAccount = new Account(0, 2.4, true); // Här räknas kontonummer.
+        Account newAccount = new Account("Sparkonto", 0, 2.4, true); // Här räknas kontonummer.
         customer.getAccounts().add(newAccount);
         result = newAccount.getAccountNumber();
         break;
@@ -118,7 +118,7 @@ public class BankLogic extends Customer {
         deList.add(customer.toString());
         if (customer.getAccounts() != null) { // Kund har konton
           for (Account acc : customer.getAccounts()) {
-            deList.add(acc.toString(false) + " " + acc.calculateInterest());
+            deList.add(acc.infoAccount() + " " + acc.calculateInterest());
           }
           // Ta bort alla konton och radera kunden från listan
           while (!customer.getAccounts().isEmpty()) {
