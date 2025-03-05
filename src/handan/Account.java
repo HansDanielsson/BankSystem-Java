@@ -23,11 +23,19 @@ public class Account {
   private BigDecimal interestRate;
 
   // Default Konstruktor för ett nytt bankkonto
-  public Account() {
+  protected Account() {
     this(accountName, 0, 2.4, false);
   }
 
-  public Account(String theAccountType, int theBalance, double theInterestRate, boolean addNumber) {
+  /**
+   * Konstruktor för nytt bankkonto
+   *
+   * @param theAccountType
+   * @param theBalance
+   * @param theInterestRate
+   * @param addNumber
+   */
+  protected Account(String theAccountType, int theBalance, double theInterestRate, boolean addNumber) {
     if (addNumber) {
       lastAssignedNumber++; // Ska bara räknas upp med 1 ibland.
     }
@@ -43,7 +51,7 @@ public class Account {
    *
    * @return x xxx kr
    */
-  public String calculateInterest() {
+  protected String calculateInterest() {
     double numberInterest = balance.multiply(interestRate).divide(BigDecimal.valueOf(100)).doubleValue();
     return NumberFormat.getCurrencyInstance(Locale.of("SV", "SE")).format(numberInterest);
   }
@@ -55,13 +63,14 @@ public class Account {
    * @param amount
    * @return true hela tiden för att amount > 0
    */
-  public boolean deposit(int amount) {
+  protected boolean deposit(int amount) {
+    boolean result = true;
     try {
       balance = balance.add(BigDecimal.valueOf(amount));
     } catch (Exception e) {
-      return false;
+      result = false;
     }
-    return true;
+    return result;
   }
 
   /**
@@ -69,16 +78,8 @@ public class Account {
    *
    * @return accountNumber
    */
-  public int getAccountNumber() {
+  protected int getAccountNumber() {
     return accountNumber;
-  }
-
-  public String getAccountType() {
-    return accountType;
-  }
-
-  public int getBalance() {
-    return balance.intValue();
   }
 
   /**
@@ -86,21 +87,17 @@ public class Account {
    *
    * @return "kontonr saldo kontotyp <procent %>"
    */
-  public String infoAccount() {
+  protected String infoAccount() {
     String balanceStr = NumberFormat.getCurrencyInstance(Locale.of("SV", "SE")).format(balance);
     return accountNumber + " " + balanceStr + " " + accountType;
   }
 
-  public String makeAccountInfo(int theBalance, double theInterestRate) {
+  private String makeAccountInfo(int theBalance, double theInterestRate) {
     String balanceStr = NumberFormat.getCurrencyInstance(Locale.of("SV", "SE")).format(theBalance);
     NumberFormat percentFormat = NumberFormat.getPercentInstance(Locale.of("SV", "SE"));
     percentFormat.setMaximumFractionDigits(1); // Anger att vi vill ha max 1 decimal
     String percentStr = percentFormat.format(theInterestRate / 100.0);
     return accountNumber + " " + balanceStr + " " + accountType + " " + percentStr;
-  }
-
-  public void setAccountType(String theAccountType) {
-    accountType = theAccountType;
   }
 
   /**
@@ -120,15 +117,16 @@ public class Account {
    * @param amount
    * @return om beloppet har minskat saldo
    */
-  public boolean withdraw(int amount) {
+  protected boolean withdraw(int amount) {
+    boolean result = false;
     if (amount <= balance.intValue()) {
       try {
         balance = balance.subtract(BigDecimal.valueOf(amount));
+        result = true;
       } catch (Exception e) {
-        return false;
+        // Empty, ingen hantering
       }
-      return true;
     }
-    return false;
+    return result;
   }
 }
