@@ -6,6 +6,8 @@ package handan;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BankLogic extends Customer {
 
@@ -20,14 +22,16 @@ public class BankLogic extends Customer {
    * @return om bytet är utfört.
    */
   public boolean changeCustomerName(String name, String surname, String pNo) {
-    boolean result = false;
-    if (!((name.isEmpty()) && (surname.isEmpty()))) {
-      Customer changeCustomer = getSearchCustomer(pNo);
-      if (changeCustomer != null) {
-        result = changeCustomer.changeCustomerName(name, surname);
-      }
+    if ((name.isEmpty()) && (surname.isEmpty())) {
+      return false;
     }
-    return result;
+
+    Customer changeCustomer = getSearchCustomer(pNo);
+    if (changeCustomer == null) {
+      return false;
+    }
+
+    return changeCustomer.changeCustomerName(name, surname);
   }
 
   /**
@@ -38,15 +42,18 @@ public class BankLogic extends Customer {
    * @return "kontonr belopp kontotyp ränta"
    */
   public String closeAccount(String pNo, int accountId) {
-    String result = null;
     Customer closeCustomer = getSearchCustomer(pNo);
-    if (closeCustomer != null) {
-      Account acc = getSearchAccount(closeCustomer.getAccounts(), accountId);
-      if (acc != null) {
-        result = acc.infoAccount() + " " + acc.calculateInterest();
-        closeCustomer.getAccounts().remove(acc);
-      }
+    if (closeCustomer == null) {
+      return null;
     }
+
+    Account account = getSearchAccount(closeCustomer.getAccounts(), accountId);
+    if (account == null) {
+      return null;
+    }
+
+    String result = account.infoAccount() + " " + account.calculateInterest();
+    closeCustomer.getAccounts().remove(account);
     return result;
   }
 
@@ -59,16 +66,12 @@ public class BankLogic extends Customer {
    * @return om kund är ny
    */
   public boolean createCustomer(String name, String surname, String pNo) {
-    boolean result = true;
     // Kontroll att kunden inte finns redan.
     if (getSearchCustomer(pNo) != null) {
-      result = false;
+      return false;
     }
-    if (result) {
-      // Ny kund till listan
-      bankCustomer.add(new Customer(name, surname, pNo));
-    }
-    return result;
+    // Ny kund till listan
+    return bankCustomer.add(new Customer(name, surname, pNo));
   }
 
   /**
@@ -78,17 +81,18 @@ public class BankLogic extends Customer {
    * @return -1 = Hittar inte pNo, annars kontonummer
    */
   public int createSavingsAccount(String pNo) {
-    int result = -1;
     Customer customer = getSearchCustomer(pNo);
-    if (customer != null) {
-      if (customer.getAccounts() == null) {
-        customer.setAccounts();
-      }
-      Account newAccount = new Account("Sparkonto", 0, 2.4, true); // Här räknas kontonummer.
-      customer.getAccounts().add(newAccount);
-      result = newAccount.getAccountNumber();
+    if (customer == null) {
+      return -1;
     }
-    return result;
+
+    if (customer.getAccounts() == null) {
+      customer.setAccounts();
+    }
+
+    Account newAccount = new Account("Sparkonto", 0, 2.4, true); // Här räknas kontonummer.
+    customer.getAccounts().add(newAccount);
+    return newAccount.getAccountNumber();
   }
 
   /**
@@ -99,25 +103,24 @@ public class BankLogic extends Customer {
    * @return "pNr f-Namn E-namn, KontoNr Typ Saldo Kr,..."
    */
   public List<String> deleteCustomer(String pNo) {
-    List<String> result = null;
     Customer customer = getSearchCustomer(pNo);
-    if (customer != null) {
-      // Skapa en ny lista med kundens data och konton
-      ArrayList<String> deList = new ArrayList<>();
-      deList.add(customer.toString());
-      if (customer.getAccounts() != null) { // Kund har konton
-        for (Account acc : customer.getAccounts()) {
-          deList.add(acc.infoAccount() + " " + acc.calculateInterest());
-        }
-        // Ta bort alla konton och radera kunden från listan
-        while (!customer.getAccounts().isEmpty()) {
-          customer.getAccounts().removeLast();
-        }
-      }
-      bankCustomer.remove(customer);
-      result = List.copyOf(deList);
+    if (customer == null) {
+      return null;
     }
-    return result;
+
+    // Skapa en ny lista med kundens data och konton
+    List<String> deList = new ArrayList<>();
+    deList.add(customer.toString());
+
+    if (customer.getAccounts() != null && !customer.getAccounts().isEmpty()) { // Kund har konton
+      for (Account acc : customer.getAccounts()) {
+        deList.add(acc.infoAccount() + " " + acc.calculateInterest());
+      }
+      // Rensa konton
+      customer.getAccounts().clear();
+    }
+    bankCustomer.remove(customer);
+    return List.copyOf(deList);
   }
 
   /**
@@ -129,17 +132,17 @@ public class BankLogic extends Customer {
    * @return True om det gick bra
    */
   public boolean deposit(String pNo, int accountId, int amount) {
-    boolean result = false;
-    if (amount > 0) {
-      Customer customer = getSearchCustomer(pNo);
-      if (customer != null) {
-        Account acc = getSearchAccount(customer.getAccounts(), accountId);
-        if (acc != null) {
-          result = acc.deposit(amount);
-        }
-      }
+    if (amount <= 0) {
+      return false;
     }
-    return result;
+
+    Customer customer = getSearchCustomer(pNo);
+    if (customer == null) {
+      return false;
+    }
+
+    Account account = getSearchAccount(customer.getAccounts(), accountId);
+    return account != null && account.deposit(amount);
   }
 
   /**
@@ -150,15 +153,13 @@ public class BankLogic extends Customer {
    * @return om accountid = kundens konto
    */
   public String getAccount(String pNo, int accountId) {
-    String result = null;
     Customer customer = getSearchCustomer(pNo);
-    if (customer != null) {
-      Account acc = getSearchAccount(customer.getAccounts(), accountId);
-      if (acc != null) {
-        result = acc.toString();
-      }
+    if (customer == null) {
+      return null;
     }
-    return result;
+
+    Account account = getSearchAccount(customer.getAccounts(), accountId);
+    return account != null ? account.toString() : null;
   }
 
   /**
@@ -168,11 +169,7 @@ public class BankLogic extends Customer {
    * @return , finns inga kunder blir den tom lista []
    */
   public List<String> getAllCustomers() {
-    List<String> customerNames = new ArrayList<>();
-    for (Customer customer : bankCustomer) {
-      customerNames.add(customer.toString());
-    }
-    return List.copyOf(customerNames);
+    return bankCustomer.stream().map(Customer::toString).collect(Collectors.toUnmodifiableList());
   }
 
   /**
@@ -183,19 +180,16 @@ public class BankLogic extends Customer {
    * @return lista på poster.
    */
   public List<String> getCustomer(String pNo) {
-    List<String> customerInfo = null;
     Customer customer = getSearchCustomer(pNo);
-    if (customer != null) {
-      ArrayList<String> getList = new ArrayList<>();
-      getList.add(customer.toString());
-      if (customer.getAccounts() != null) {
-        for (Account acc : customer.getAccounts()) {
-          getList.add(acc.toString());
-        }
-      }
-      customerInfo = List.copyOf(getList);
+    if (customer == null) {
+      return null;
     }
-    return customerInfo;
+
+    return Stream
+        .concat(Stream.of(customer.toString()),
+            customer.getAccounts() == null ? Stream.empty() : customer.getAccounts().stream().map(Account::toString))
+        .collect(Collectors.toUnmodifiableList());
+
   }
 
   /**
@@ -206,14 +200,11 @@ public class BankLogic extends Customer {
    * @return result , pekare till konto om det finns.
    */
   private Account getSearchAccount(List<Account> accounts, int theAccountNumber) {
-    Account result = null;
-    for (Account acc : accounts) {
-      if (acc.getAccountNumber() == theAccountNumber) {
-        result = acc;
-        break;
-      }
+    if (accounts == null) {
+      return null;
     }
-    return result;
+
+    return accounts.stream().filter(acc -> acc.getAccountNumber() == theAccountNumber).findFirst().orElse(null);
   }
 
   /**
@@ -223,14 +214,12 @@ public class BankLogic extends Customer {
    * @return pekare till kundens post om den finns.
    */
   private Customer getSearchCustomer(String theSearchNo) {
-    Customer result = null;
-    for (Customer customer : bankCustomer) {
-      if (customer.getPersonalNumber().equals(theSearchNo)) {
-        result = customer;
-        break;
-      }
+    if (theSearchNo == null || theSearchNo.isEmpty()) {
+      return null;
     }
-    return result;
+
+    return bankCustomer.stream().filter(customer -> theSearchNo.equals(customer.getPersonalNumber())).findFirst()
+        .orElse(null);
   }
 
   /**
@@ -242,16 +231,20 @@ public class BankLogic extends Customer {
    * @return
    */
   public boolean withdraw(String pNo, int accountId, int amount) {
-    boolean result = false;
-    if (amount > 0) {
-      Customer customer = getSearchCustomer(pNo);
-      if (customer != null) {
-        Account acc = getSearchAccount(customer.getAccounts(), accountId);
-        if (acc != null) {
-          result = acc.withdraw(amount);
-        }
-      }
+    if (amount <= 0) {
+      return false;
     }
-    return result;
+
+    Customer customer = getSearchCustomer(pNo);
+    if (customer == null) {
+      return false;
+    }
+
+    Account account = getSearchAccount(customer.getAccounts(), accountId);
+    if (account == null) {
+      return false;
+    }
+
+    return account.withdraw(amount);
   }
 }

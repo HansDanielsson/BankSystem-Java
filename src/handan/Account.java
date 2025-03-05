@@ -64,13 +64,12 @@ public class Account {
    * @return true hela tiden för att amount > 0
    */
   protected boolean deposit(int amount) {
-    boolean result = true;
     try {
       balance = balance.add(BigDecimal.valueOf(amount));
     } catch (Exception e) {
-      result = false;
+      return false;
     }
-    return result;
+    return true;
   }
 
   /**
@@ -118,15 +117,16 @@ public class Account {
    * @return om beloppet har minskat saldo
    */
   protected boolean withdraw(int amount) {
-    boolean result = false;
-    if (amount <= balance.intValue()) {
-      try {
-        balance = balance.subtract(BigDecimal.valueOf(amount));
-        result = true;
-      } catch (Exception e) {
-        // Empty, ingen hantering
-      }
+    if (amount > balance.intValue()) {
+      return false;
     }
-    return result;
+
+    try {
+      balance = balance.subtract(BigDecimal.valueOf(amount));
+    } catch (Exception e) {
+      // Empty, ingen hantering
+      return false;
+    }
+    return true;
   }
 }
