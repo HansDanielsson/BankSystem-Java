@@ -189,7 +189,6 @@ public class BankLogic extends Customer {
         .concat(Stream.of(customer.toString()),
             customer.getAccounts() == null ? Stream.empty() : customer.getAccounts().stream().map(Account::toString))
         .collect(Collectors.toUnmodifiableList());
-
   }
 
   /**
